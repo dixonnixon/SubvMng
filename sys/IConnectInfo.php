@@ -1,11 +1,11 @@
 <?php
 interface IConnectInfo
 {
-	const HOST = "srv1800db02";
+	const HOST = "99-WORKER\SQLEXP";
 	const UNAME = "sa";
-	const PW = "1[H.yltkm$";
+	const PW = "P@ssw0rd";
 
-	const DBNAME = "SubvMng";
+	const DBNAME = "SubvMngI1";
 	
 	public static function doConnect($test);
 }
