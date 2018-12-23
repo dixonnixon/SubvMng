@@ -187,11 +187,75 @@ class SqlServerPdoAdapter implements IDataBaseAdapter
 		$this->stmt->execute();
 		return $this;
 	}
+
+	
+	
+	public function Proc($proc, $bindVal) 
+	{
+		$bind = array_keys($bindVal);
+		$where = array();
+		
+		// print_r($bindVal);
+		// print_r($bind);
+
+		
+		foreach ($bindVal as $col => $value) {
+			$where[] = " " . $bindVal[$col] . " ";
+			
+		}
+		
+		$where = implode(" , ", $where);
+		// echo "" . $where . "";
+		// print_r($bind);
+		// print_r($strPar);
+		// print_r(implode(" " . "AND" . " ", $strPar));
+		// print_r($where);
+		
+		$sql = "EXEC  {$proc} {$where}";
+		
+		
+		 // echo "<pre>";
+		 // print_r($sql);
+		 // echo "</pre>";
+		$this->prepare($sql);
+		// $this->bindParameters($bind);
+		// $this->bindParameters($bindVal);
+		// $this->stmt->execute($bindVal);
+		return $this->stmt->execute($bindVal);
+	}
+	
+	public function selectSimple($table, $strPar, $bindVal) 
+	{
+		$bind = array_keys($bindVal);
+		$where = array();
+		
+		foreach ($strPar as $col => $value) {
+			$where[] = " " . $strPar[$col] . " = " . $bind[$col];
+		}
+		
+		$where = implode(" AND ", $where);
+		// echo "" . $where . "";
+		// print_r($bind);
+		// print_r($strPar);
+		// print_r(implode(" " . "AND" . " ", $strPar));
+		
+		$sql = "SELECT * from {$table} 
+		WHERE {$where}";
+		
+		
+		// print_r($sql);
+		$this->prepare($sql);
+			// $this->bindParameters($bind);
+		$this->bindParameters($bindVal);
+		$this->stmt->execute($bindVal);
+		return $this;
+	}
 	
 	public function select(
 		$table, 
 		array $bind = array(),
-		$boolOperator = "AND") 
+		$boolOperator = "AND",
+		array $columns = array()) 
 	{
 			if ($bind) {
 				// echo "<pre>bind\n";
@@ -204,18 +268,97 @@ class SqlServerPdoAdapter implements IDataBaseAdapter
 					$where[] = $col . " = :" . $col;
 				}
 			}
-			$sql = "SELECT * FROM " . $table
+			
+			if($columns)
+			{
+				$sel = array();
+				foreach ($columns as $col => $value) {
+					// print_r($col);
+					// print_r($value);
+					
+					$sel[] = $value;
+				}
+			}
+			
+			$sql = "SELECT " 
+				. (($columns) ?
+					implode(", ", $sel) : " * "
+				) 					
+				." FROM " . $table
 				. (($bind) ? " WHERE "
-				. implode(" " . $boolOperator . " ", $where) : " ");
+					. implode(" " . $boolOperator . " ", $where) : " "
+				);
 				
 			
 			// print_r($bind);
 			
 			// echo $sql;
+			// echo "<pre>";
+			// print_r(debug_backtrace());
+			// echo "</pre>";
 			$this->prepare($sql);
+			// $this->bindParameters($bind);
 			$this->bindParameters($bind);
 			$this->stmt->execute($bind);
 			return $this;
+	}
+	
+	public function insertManyToOne($table, array $bind) 
+	{
+		$columnList = array_keys($bind);
+		// print_r($columnList);
+		$cols = implode(", ", $columnList);
+		$values = 
+			"VALUES (:" . implode(", :", array_keys($bind)). ")";
+		foreach ($bind as $col => $value) {
+			// unset($bind[$col]);
+			$tempCols[":" . $col] = $value;
+			
+			if(is_array($value)) {
+				
+				$values = "VALUES ";
+				// print_r($bind);
+				
+				// print_r($value);
+				
+				foreach($value as $key => $valuMult) {
+					// unset($bind);
+					unset($bind[$col]);
+					$valuesList[] = "(" 
+					. ":" . $columnList[0] . $key .", " 
+					. ":" . $col . $key .")";
+				
+					$bindCols[ ":".$col.$key]
+						= $valuMult;
+					$bindCols[ ":".$columnList[0].$key]
+						= $bind[$columnList[0]];
+					
+				}
+				
+				$values .= implode(", ", $valuesList);
+				// print_r($values);
+				
+				
+				
+			} else {
+				
+				// $bindCols[":" . $col] = $value;
+				// var_dump($list);
+				// echo "tmp";
+				// print_r($tempCols);
+				// print_r(key($tempCols));
+				
+			}
+		}
+		
+		
+		$sql = "INSERT INTO " . $table
+		. " (" . $cols . ") " . $values ;
+		echo $sql;
+		print_r($bindCols);
+		$this->prepare($sql);
+		$this->stmt->execute($bindCols);
+		return (int) $this->lastInsertId();
 	}
 	
 	public function insert($table, array $bind) {
@@ -233,6 +376,9 @@ class SqlServerPdoAdapter implements IDataBaseAdapter
 		$this->stmt->execute($bind);
 		return (int) $this->lastInsertId();
 	}
+	
+	
+	
 	
 	public function update($table, array $bind, $where = "") {
 		// print_r($bind);
@@ -258,12 +404,27 @@ class SqlServerPdoAdapter implements IDataBaseAdapter
 		return (int) $this->countAffectedRows();
 	}
 	
+	public function deleteManyFromOne(
+		$table, $where) 
+	{
+		// print_r($where);
+		// $strWhere = implode(" {$boolOperator} " , $where);
+		$sql = "DELETE FROM " . $table . (($where) ? " WHERE " . $where : " ");
+		
+		// print_r($where);
+		echo $sql;
+		
+		$this->prepare($sql);
+		$this->stmt->execute();
+		return (int) $this->countAffectedRows();
+	}
+	
 	public function delete($table, $where = "") {
 		
 		$sql = "DELETE FROM " . $table . (($where) ? " WHERE " . $where : " ");
 		
 		// print_r($where);
-		// echo $sql;
+		echo $sql;
 		
 		$this->prepare($sql);
 		$this->stmt->execute();

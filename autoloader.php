@@ -6,19 +6,21 @@ function class_loader($class_name) {
 	$dirs = array(
 		APP_ROOT . DS . 'classes'. DS . 'entities'. DS,
 		APP_ROOT . DS . 'classes'. DS . 'mappers'. DS,
+		APP_ROOT . DS . 'classes'. DS . 'services'. DS,
 		APP_ROOT . DS . 'classes'. DS,
-		APP_ROOT . DS . 'sys'. DS
+		APP_ROOT . DS . 'views' . DS . 'reports' . DS,
+		APP_ROOT . DS . 'sys'. DS,
 		// APP_ROOT . DS . 'view'. DS,
 		// APP_ROOT . DS . 'models'. DS,
 		// APP_ROOT . DS . 'reports'. DS,
 		// APP_ROOT . DS . 'mappers'. DS,
-		// APP_ROOT . DS . 'controllers'. DS,
+		APP_ROOT . DS . 'controllers'. DS,
 		
 		// APP_ROOT . DS . 'sys/triggers'. DS,
 		// APP_ROOT . DS . 'classes' . DS . 'Helpers' . DS,		
 		// APP_ROOT . DS . 'classes' . DS . 'entityServices' . DS,		
 		// APP_ROOT . DS . 'sys' . DS . 'export' . DS,		
-		// APP_ROOT . DS
+		APP_ROOT . DS
 	);
 	
 	foreach($dirs as $dir) {

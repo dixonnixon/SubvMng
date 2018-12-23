@@ -1,4 +1,7 @@
 <?php
+header('Content-type: text/html; charset=utf-8');
+@session_start();
+
 error_reporting(E_ALL);
 ini_set("display_errors", "1");
 require_once("Settings.php");
@@ -6,25 +9,75 @@ require_once("autoloader.php");
 
 date_default_timezone_set("Europe/Kiev");
 
-$obj = new SubObj();
-$obj->setName("Build1");
-echo $obj->getName();
+try 
+{
+	$bootstrap = new Bootstrap($_GET);
+	$controller = $bootstrap->createController();
+	
 
-// $date = ;
+
+	$ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+	$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+	if (!$ajax && $controller) {
+		echo (string) $controller->getHeaderText();
+		echo (string) $controller->getContent();
+		echo (string) $controller->getFooterText();
+	} elseif($controller) {
+		print (string) $controller->getAjax();
+	}
+
+} catch (Exception $e) {
+	$trace = $e->getTrace();
+	$message = $e->getMessage();
+	echo "<pre>";
+		
+		print_r($message);
+		print_r($trace);
+		print_r(debug_backtrace());
+	echo "</pre>";
+}
 
 
-// var_dump($date);
+// $model = new SqlServerPdoAdapter();
+// $dbh = $model->startConnection();
 
-// var_dump(new DateTime());
-$obj->setDate(new DateTime());
+// $ToboMapper = new ToboMapper($dbh);
+// $BudgetMapper = new BudgetMapper($dbh, $ToboMapper);
+// $subObjMapper = new SubObjMapper($dbh, $ToboMapper, $BudgetMapper);
 
-echo "<pre>";
-print_r($obj);
-echo "</pre>";
 
-$model = new SqlServerPdoAdapter();
-$dbh = $model->startConnection();
+// $tobo1 = $ToboMapper->findById("1809");
+// $budg1 = $BudgetMapper->findById("5900000000");
+// $objT1 = $subObjMapper->findById("8");
 
-$subObjMapper = new SubObjMapper($dbh);
-$subObjMapper->insert($obj);
+// echo "<pre>";
+// print_r($tobo1);
+// print_r($budg1);
+// print_r($objT1);
+
+// $obj = new SubObj();
+// $obj->setName("Build1");
+// $obj->setTobo($tobo1);
+// $obj->setBudget("5900000000");
+// $obj->setDateObj(new DateTime());
+// $obj->setPerm(array("1813", "1856"));
+
+// print_r($obj);
+
+
+// $idTest = $subObjMapper->insert($obj);
+// var_dump($idTest);
+
+// $subObjMapper->delete("8");
+
+// $subObjMapper->insertPerm($objT1, array("1800", "1807"));
+// $subObjMapper->insertPerm($objT1, "1816");
+
+// $deleted = $subObjMapper->deletePerm($objT1, array("1800", "1805", "1816"));
+
+// $deleted = $subObjMapper->deletePerm($objT1, array("1800", "1805", "1816"));
+
+// $deleted = $subObjMapper->deletePerm($objT1, "1808");
+
+// var_dump($deleted);
 ?>

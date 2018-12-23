@@ -1,9 +1,9 @@
 <?php
 interface IConnectInfo
 {
-	const HOST = "99-WORKER\SQLEXP";
+	const HOST = "srv1800db02";
 	const UNAME = "sa";
-	const PW = "xxx";
+	const PW = "1[H.yltkm$";
 
 	const DBNAME = "SubvMng";
 	

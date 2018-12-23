@@ -1,0 +1,65 @@
+.tooltip-inner {
+	background-color: #A1CC66;
+}
+
+.tooltip-arrow {
+	color: #A1CC66;
+}
+
+[data-placement="left"] + .tooltip > .tooltip-arrow {
+	
+	/* border-top-color: #A1CC66; */
+	/* background-color: #A1CC66; */
+}
+
+#ajaxSucc { color: green; }
+#ajaxFail { color: red; }
+
+
+
+/* [data-placement="top"] + .tooltip > .tooltip-arrow {
+	border-top-color: #A1CC66;
+	background-color: #A1CC66;
+}
+
+
+[data-placement="right"] + .tooltip > .tooltip-arrow {
+	border-top-color: #A1CC66;
+	background-color: #A1CC66;
+}
+
+[data-placement="botoom"] + .tooltip > .tooltip-arrow {
+	border-top-color: #A1CC66;
+	background-color: #A1CC66;
+} */
+
+.table-responsive {
+	overflow-y: visible;
+	overflow-x: visible;
+}
+
+.dropdown-menu-item {
+	clear: both;
+	display: block;
+	white-space: nowrap;
+	
+	text-align: left;
+	outline: none;
+	cursor: pointer;
+}
+
+.dropdown-menu-item.checkbox input {
+	display: none;
+}
+
+td  {
+	white-space: normal !important;
+	word-wrap: break-word;
+}
+
+
+@media (max-width: 700px) {
+	.table-responsive{
+		overflow: visible;
+	}
+}

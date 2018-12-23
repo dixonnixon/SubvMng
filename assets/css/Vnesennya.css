@@ -1,0 +1,21 @@
+/* .hide-calendar  .ui-datepicker-calendar  {
+	display:none!important;
+	visibility:hidden!important;
+}
+
+.MonthDatePicker .ui-datepicker-month {
+	display: none;
+}
+
+.HideTodayButton .ui-datepicker-buttonpane .ui-datepicker-currnet {
+	visibility: hidden;
+}
+
+.ui-datepicker-prev  span{
+	color: transparent;
+	font-size: 0;
+} */
+
+/* table.jCalendar td.other-month {
+	visibility: hidden;
+} */
