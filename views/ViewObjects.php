@@ -9,14 +9,14 @@ foreach($res["data"]["Objects"] as $obj => $val) {
 	
 	// echo "<pre>";
 	// print_r($perm);
-	// print_r($res["data"]["Tobo"]);
-	// print_r();
-	$permitted = array_replace($res["data"]["Tobo"], $perm);
+	// // print_r($res["data"]["Tobo"]);
+	// // print_r();
+	// // $permitted = array_replace($res["data"]["Tobo"], $perm);
 	// echo "</pre>";
 	$permList = "";
 	$opt = "";
 	
-	foreach($permitted as $pTobo => $checked) {
+	foreach($perm as $pTobo => $checked) {
 		($checked == "0") 
 			? $checked = "" :  
 			$checked ="checked";

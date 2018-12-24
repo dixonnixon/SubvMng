@@ -108,8 +108,15 @@ class View extends AbstractController
 				"FindAll",
 				array()
 			);
+
+				
+
 			foreach($Tobo->get() as $tobo)
 			{	$toboPerm[$tobo->getTobo()] = 0;	}	
+			// print_r($toboPerm);
+
+
+
 		} elseif($this->props["Tobo"] == 1800) {
 			$method = "selectFn";
 			$this->setSessionVars(
@@ -145,7 +152,9 @@ class View extends AbstractController
 			$params
 		);
 		
-		
+		// echo "<pre>";
+		// print_r( $Objects->get());
+		// echo "</pre>";
 		
 		return array(
 			"vars" => array(
@@ -154,7 +163,7 @@ class View extends AbstractController
 				"action"	=> $hendlerPath
 			),
 			"data" => array(
-				"Tobo"		=> $toboPerm,
+				// "Tobo"		=> $toboPerm,
 				"Budget"  	=> $Budget->get(),
 				"Objects" 	=> $Objects->get(),			
 			)

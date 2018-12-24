@@ -38,7 +38,23 @@ class SubObjMapper extends AbstractDataMapper implements ISubObjMapper
 		}
 
         return $subObj->id;
-    }
+	}
+	
+	//метод що знаходить дозволи у вигляді
+	//["Тобо"=>(0,1), ..]
+	public function findPerm($id) {
+		// $params = array($name => ControllerCreator::getTobo());
+		$this->adapter->selectFn("fn_checkAccess", array("id"=> $id));
+
+		if (!$rows = $this->adapter->fetchAll()) 
+			return new NullSubObj;
+		
+		
+		// fetch entity objects
+		
+		return $rows;
+		
+	}
 	
 	public function findById($id) {
 		
@@ -226,7 +242,8 @@ class SubObjMapper extends AbstractDataMapper implements ISubObjMapper
     protected function createEntity(array $row) 
 	{
 		$perm = array();
-		// print_r($row);
+		$perms = array();
+		print_r($row);
 		
 		$budget = $this->budgetMapper->findById(array($row["budgCode"]));
 		
@@ -235,14 +252,23 @@ class SubObjMapper extends AbstractDataMapper implements ISubObjMapper
 		// print_r($objTobo);
 		// print_r($row);
 		
+		// echo "<pre>";
+		// print_r(($this->findPerm($row["subObjId"])));
+		// print_r(($this->selectPerm($row["subObjId"])));
+		
+
 		//заповнюємо рядок дозволів
 		if($tobo == "1800" ) {
-			foreach($this->selectPerm($row["subObjId"]) as $tb) {
-				$perm[$tb] = 1;
+			// 
+			
+
+			foreach(($this->findPerm($row["subObjId"])) as $btb) {
+				// print_r($btb);
+				$perms[$btb["tobo"]] = $btb["access"];
 			}
 		}
 		
-		
+		// echo "</pre>";
 		
 		
 		if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
@@ -251,7 +277,7 @@ class SubObjMapper extends AbstractDataMapper implements ISubObjMapper
 				"id" 	=> $row["subObjId"], 
 				"name" 	=> $row["name"], 
 				"budg"	=> $budget->getCode(),
-				"perm"	=> $perm,
+				"perm"	=> $perms,
 				"year"	=> $row["year"],
 				"sum"	=> $row["sum"]
 			);
@@ -262,7 +288,7 @@ class SubObjMapper extends AbstractDataMapper implements ISubObjMapper
 				"id" 	=> $row["subObjId"], 
 				"name" 	=> $row["name"], 
 				"budg"	=> $budget,
-				"perm"	=> $perm,
+				"perm"	=> $perms,
 				"year"	=> $row["year"],
 				"sum"	=> $row["sum"]
 			)
