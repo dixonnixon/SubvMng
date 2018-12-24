@@ -36,7 +36,9 @@ class UpdateEntity extends IStrategy
 			}
 		}
 		
+		// print_r($dataArray);
 		
+
 		$result = $Mapper->{self::$method} ($dataArray[0]);
 		
 		$budget= "";

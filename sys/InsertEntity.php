@@ -32,8 +32,11 @@ class InsertEntity extends IStrategy
 		}
 	
 		// print_r($dataArray);
-		// print_r($dataArray);
+		echo "<pre>";
+		print_r($dataArray);
+		echo "</pre>";
 		//тут повинен передаватись об`єкт
+		
 		$result = &$Mapper->{self::$method} ($dataArray[0]);
 		
 		$budget= "";

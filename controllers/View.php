@@ -109,7 +109,7 @@ class View extends AbstractController
 				array()
 			);
 			foreach($Tobo->get() as $tobo)
-			{$toboPerm[$tobo->getTobo()] = 0;}
+			{	$toboPerm[$tobo->getTobo()] = 0;	}	
 		} elseif($this->props["Tobo"] == 1800) {
 			$method = "selectFn";
 			$this->setSessionVars(

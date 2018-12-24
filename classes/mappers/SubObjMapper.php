@@ -165,6 +165,12 @@ class SubObjMapper extends AbstractDataMapper implements ISubObjMapper
 
 			
 		);
+
+		$perm = $object->getPerm();
+		//add inserting permissions
+		if(!empty($perm) && isset($perm)) {
+			$this->insertPerm($object, $perm);
+		}
 	}
 	
 	//function is to delete spec view permissions

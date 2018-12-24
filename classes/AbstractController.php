@@ -6,8 +6,17 @@ abstract Class AbstractController
 	
 	public function __construct( $props) {
 		$this->props = $props;
-		// print_r($this->props);
+
+		print_r($_SESSION);
+		print_r($this->props);
+
+		echo http_build_query($this->props) . "\n";
+		// $this->setSessionVars("PrevEntity", $_SESSION["Entity"]);
+		echo "<pre>";
+		echo "</pre>";
+		
 	}
+
 	
 	// protected static $credentials = array();
 	

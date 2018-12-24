@@ -877,3 +877,16 @@ ON b.budgCode = o.budgCode
 
 GROUP BY   
 	GROUPING SETS(ROLLUP(o.budgCode, o.subObjId))
+
+
+
+
+;WITH CTE AS (SELECT op.tobo tp, t.tobo tobo
+ FROM Tobo t 
+ LEFT JOIN objPerms op
+ ON t.tobo = op.tobo
+ )
+ SELECT  CASE
+	WHEN c.tp IS NULL THEN 0
+	WHEN c.tp IS NOT NULL THEN 1
+ END AS access,c.tobo FROM CTE c

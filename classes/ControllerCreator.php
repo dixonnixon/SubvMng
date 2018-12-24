@@ -28,12 +28,12 @@ abstract class ControllerCreator
 	}
 	
 	private function setCredentials() {
-		$credentials = explode("\\", $_SERVER["AUTH_USER"]);
-		$creds = explode("-", $credentials[1]);
-		$user = $creds[1];
-		$tobo = (int) $creds[0];
-		// $user = "Gladenko";
-		// $tobo = 1800;
+		// $credentials = explode("\\", $_SERVER["AUTH_USER"]);
+		// $creds = explode("-", $credentials[1]);
+		// $user = $creds[1];
+		// $tobo = (int) $creds[0];
+		$user = "Gladenko";
+		$tobo = 1800;
 		//тут задається перевірка серверної змінної ІІS
 		//"AUTH_USER"
 		if(!preg_match('/^\d{4}$/', $tobo)) {

@@ -1,5 +1,35 @@
 <?php 
-//print_r($res["data"]);
+echo "<pre>";
+print_r($res["data"]);
+echo "</pre>";
+
+// print_r($res["data"]->getPerm());
+$permitted = $res["data"]->getPerm();
+$opt = "";
+
+
+
+foreach($permitted as $pTobo => $checked) {
+	($checked == "0") 
+		? $checked = "" :  
+		$checked ="checked";
+	($checked == "checked")
+		? $gliph= "share" 
+		: $gliph= "unchecked";
+	$opt .=  
+<<<OPT
+	<tr>
+		<td>
+		<label class="dropdown-menu-item checkbox" data-value="{$pTobo}" tabIndex="-1">
+			<input type="checkbox" {$checked}/>
+			<span class="glyphicon glyphicon-{$gliph}">&nbsp;{$pTobo}</span>
+		</label>
+		</td>
+	</tr>
+OPT;
+}
+
+echo "<table>" . $opt . "</table>";
 
 echo 
 <<<FORM

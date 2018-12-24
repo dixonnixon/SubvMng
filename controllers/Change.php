@@ -39,6 +39,38 @@ class Change extends AbstractController
 		if(isset($this->props["Budget"]) 
 			&& !empty($this->props["ObjId"])) 
 		{
+
+			if(ControllerCreator::getTobo() == 1800) {
+				// $this->setSessionVars("Tobo", $this->props["Tobo"]);
+				$this->setSessionVars("BudgetCode", $this->props["BudgetCode"]);
+				$this->setSessionVars(
+					"Entity", $this->props["entity"] 
+				);
+				$method = "FindAll";
+				$params = array("budgCode" => $this->props["BudgetCode"]);
+				
+				$Tobo = new Trigger(
+					"Tobo",
+					"select",
+					"FindAll",
+					array()
+				);
+				foreach($Tobo->get() as $tobo)
+				{	$toboPerm[$tobo->getTobo()] = 0;	}	
+			} elseif($this->props["Tobo"] == 1800) {
+				$method = "selectFn";
+				$this->setSessionVars(
+					"Entity", ControllerCreator::getTobo()
+				);
+				$params = array(ControllerCreator::getTobo());
+			} elseif($this->props["Tobo"] == ControllerCreator::getTobo()) {
+				$method = "FindAll";
+				$params = array("budgCode" => $this->props["BudgetCode"]);
+			} else {
+				echo "Ввели неправильний параметр";
+				return;
+			}
+			
 			$hendlerPath = 
 				Settings::$FORM_HENDLERS 
 				. "changeObjectForm.php";
@@ -64,7 +96,12 @@ class Change extends AbstractController
 			$this->setSessionVars(
 				"ObjId", $objectData->getId()
 			);
-			
+			// echo "<pre>";
+			// print_r($objectData);
+			// print_r($objectData->getBudget()->getTobo()->getTobo());
+			// echo "</pre>";
+
+
 			return array(
 				"vars" => array(
 					"name" 		=> __FUNCTION__, 
