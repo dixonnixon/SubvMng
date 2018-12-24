@@ -186,8 +186,9 @@ CREATE TABLE FactIncomes
 	feature 	varchar(1) 		NULL,
 	CONSTRAINT 	PK_FactIncomes
 		PRIMARY KEY (incomeId)	
-)
+);
 
+GO
 CREATE TRIGGER [dbo].[tr_insert_fact_date_less_date_year] 
 on [dbo].[FactIncomes]
    FOR INSERT, UPDATE AS 
@@ -218,6 +219,7 @@ BEGIN
 		WHERE (i.date <= y.date)
 END
 
+GO
 CREATE TRIGGER [dbo].[tr_insert_fact_date_less_year_sum] 
 on [dbo].[FactIncomes]
    FOR INSERT, UPDATE AS 
@@ -283,6 +285,8 @@ CREATE TABLE Outcomes
 	feature 	varchar(1) 		NULL
 )
 
+
+GO
 ALTER TRIGGER [dbo].[tr_FillDeletedOutcomes] 
    ON  [dbo].[Outcomes]
    INSTEAD OF DELETE AS
@@ -327,7 +331,7 @@ BEGIN
 END
 
 
-
+GO
 ALTER TRIGGER [dbo].[tr_insert_inc_each_factProv_zero] 
 on [dbo].[YearProvs]
 INSTEAD OF INSERT, UPDATE AS 
@@ -483,7 +487,7 @@ insert INTO @months
 END
 
 
-
+GO
 ALTER TRIGGER [dbo].[tr_insert_inc_each_outc_zero] 
 on [dbo].[YearRems]
 INSTEAD OF INSERT, UPDATE AS 
@@ -576,7 +580,7 @@ insert INTO @months
 	
 END
 
-
+GO
 ALTER proc [dbo].[groupMonthO](@tblNm sysname, @idObj INT, @idInc INT, @year varchar(4))
 AS
 BEGIN
@@ -602,7 +606,7 @@ exec sp_executesql @SQLString, N'@id INT, @year varchar(4), @idInc INT',
 RETURN @@ROWCOUNT
 end 
 
-
+GO
 ALTER proc [dbo].[sp_checkIdInTable](@tblNm sysname, @id INT)
 AS
 BEGIN
@@ -629,7 +633,7 @@ RETURN @@ROWCOUNT
 END
 
 
-
+GO
 ALTER FUNCTION [dbo].[fn_ProvsByObj](@objId int)
 RETURNS @incomes TABLE
 (
@@ -654,7 +658,7 @@ AS BEGIN
 		RETURN
 END
 
-
+GO
 ALTER FUNCTION [dbo].[fn_RemsByObj](@objId int)
 RETURNS @incomes TABLE
 (
@@ -681,7 +685,7 @@ AS BEGIN
 		RETURN
 END
 -----------------------------------------------------------------------------------------------
-
+GO
 ALTER FUNCTION [dbo].[fn_report_curAllPrevRem](@year varchar(4), 
 @month varchar(2), @current BIT, @prevAll BIT)
 RETURNS @Objs TABLE
@@ -749,7 +753,7 @@ AS BEGIN
 END
 
 --------------------------------------------------------____
-
+GO
 use SubvMng
 INSERT INTO Tobo VALUES
  ('1800', 'ГУ ДКCУ  у Сумськiй області'),
@@ -879,14 +883,19 @@ GROUP BY
 	GROUPING SETS(ROLLUP(o.budgCode, o.subObjId))
 
 
-
-
-;WITH CTE AS (SELECT op.tobo tp, t.tobo tobo
- FROM Tobo t 
- LEFT JOIN objPerms op
- ON t.tobo = op.tobo
+;WITH CTE AS (
+	SELECT * FROM objPerms
+	WHERE subObjId = 264
+ ), 
+ sCte as(
+	SELECT  
+ CASE
+	WHEN c.tobo IS NULL THEN 0
+	WHEN c.tobo IS NOT NULL THEN 1
+ END AS access,
+ t.tobo
+ FROM CTE c
+ RIGHT OUTER JOIN Tobo t
+ ON c.tobo = t.tobo
  )
- SELECT  CASE
-	WHEN c.tp IS NULL THEN 0
-	WHEN c.tp IS NOT NULL THEN 1
- END AS access,c.tobo FROM CTE c
+ SELECT * FROM sCte

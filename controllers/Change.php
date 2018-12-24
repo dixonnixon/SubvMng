@@ -42,12 +42,12 @@ class Change extends AbstractController
 
 			if(ControllerCreator::getTobo() == 1800) {
 				// $this->setSessionVars("Tobo", $this->props["Tobo"]);
-				$this->setSessionVars("BudgetCode", $this->props["BudgetCode"]);
+				$this->setSessionVars("Budget", $this->props["Budget"]);
 				$this->setSessionVars(
 					"Entity", $this->props["entity"] 
 				);
 				$method = "FindAll";
-				$params = array("budgCode" => $this->props["BudgetCode"]);
+				$params = array("budgCode" => $this->props["Budget"]);
 				
 				$Tobo = new Trigger(
 					"Tobo",
