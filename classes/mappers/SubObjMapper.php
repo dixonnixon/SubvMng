@@ -40,20 +40,15 @@ class SubObjMapper extends AbstractDataMapper implements ISubObjMapper
         return $subObj->id;
 	}
 	
-	//метод що знаходить дозволи у вигляді
+	//метод що знаходить за ІД об'єкта, дозволи на об'єкт у вигляді
 	//["Тобо"=>(0,1), ..]
 	public function findPerm($id) {
 		// $params = array($name => ControllerCreator::getTobo());
 		$this->adapter->selectFn("fn_checkAccess", array("id"=> $id));
-
 		if (!$rows = $this->adapter->fetchAll()) 
 			return new NullSubObj;
-		
-		
 		// fetch entity objects
-		
 		return $rows;
-		
 	}
 	
 	public function findById($id) {

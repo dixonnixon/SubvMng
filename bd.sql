@@ -883,19 +883,41 @@ GROUP BY
 	GROUPING SETS(ROLLUP(o.budgCode, o.subObjId))
 
 
-;WITH CTE AS (
-	SELECT * FROM objPerms
-	WHERE subObjId = 264
- ), 
- sCte as(
-	SELECT  
- CASE
-	WHEN c.tobo IS NULL THEN 0
-	WHEN c.tobo IS NOT NULL THEN 1
- END AS access,
- t.tobo
- FROM CTE c
- RIGHT OUTER JOIN Tobo t
- ON c.tobo = t.tobo
- )
- SELECT * FROM sCte
+LTER FUNCTION [dbo].[fn_checkAccess](@id INT)
+RETURNS @ac TABLE
+(
+	access		BIT			NOT NULL,
+	tobo		int			NOT NULL		
+)
+AS BEGIN
+	DECLARE @isObj INT
+	
+	SELECT @isObj = COUNT(*) FROM subObjs
+	WHERE subObjId = @id
+	
+	IF(@isObj > 0)
+	BEGIN
+		;WITH CTE AS (
+			SELECT * FROM objPerms
+			WHERE subObjId = @id
+		 ), 
+		 sCte as(
+			SELECT  
+		 CASE
+			WHEN c.tobo IS NULL THEN 0
+			WHEN c.tobo IS NOT NULL THEN 1
+		 END AS access,
+		 t.tobo
+		 FROM CTE c
+		 RIGHT OUTER JOIN Tobo t
+		 ON c.tobo = t.tobo
+		 )
+		 INSERT INTO @ac
+		 SELECT * FROM sCte
+	END 
+	ELSE
+		BEGIN
+			return
+		END
+	RETURN 
+END
