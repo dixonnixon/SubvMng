@@ -38,6 +38,7 @@ class Bootstrap
 		$controller = ControllerCreator::getInstance($this->comanda);
 		
 		// var_dump($controller);
+		//передаєм в сінглтон параметри 
 		if(!is_null($controller)) {
 			foreach($this->request as $prop => $value) {
 				$controller->setProperty($prop, $value);
@@ -45,14 +46,12 @@ class Bootstrap
 		
 		//додаєм 1 параметр яки не заданий за замовченням 
 		//в рядку адреси
-			$controller->setProperty('comanda', "Viewer");
+			$controller->setProperty('comanda', $this->comanda);
 		
 			return $controller;
 		}
 		header("Location: index.php");
 		return;
-		//передаєм в сінглтон параметри 
-		
 	}
 	
 }

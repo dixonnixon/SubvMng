@@ -83,7 +83,7 @@ function ucFirst(field) {
 var getParams =  
 			"?CRUD=Report"
 		+  	"&entity=Subv";
-var cache = [];
+// var cache = {};
 var ajaxCall = function(date) {
 			var chacheKey = date;
 			var method = "&method=selectFn";
@@ -93,27 +93,26 @@ var ajaxCall = function(date) {
 				tobo = '0000';
 			}
 			
-			if(!cache[chacheKey]) {
-				cache[chacheKey] = $.ajax({
-					dataType: "json",
-					url: 'index.php' + getParams + method,
-					data: {
-						"date" : 	date,
-						"Tobo" : 	tobo
-					},
-					timeout: 15000
-				});
-			}
-			
-			cache[chacheKey]
+			// console.log(cache);
+			// console.log(chacheKey);
+
+			// if(!cache[chacheKey]) {
+				// cache[chacheKey] = $.ajax({
+			$.ajax({
+				dataType: "json",
+				url: 'index.php' + getParams + method,
+				data: {
+					"date" : 	date,
+					"Tobo" : 	tobo
+				},
+				timeout: 15000
+			})
 				.done(ajaxSuccess)
 				.pipe()
 				.fail(function(jqXHR) {
 						console.log(jqXHR);
 						$("<span></span>").appendTo('.container').html('Шкода... Але виникла помилка : ' + jqXHR.status);
 				});	
-			
-			
 		}
 
 function ajaxSuccess(data) {
@@ -191,7 +190,8 @@ function ajaxSuccess(data) {
 $(document).ready(function() {
 	window.broker = $({});
 	var $dateReport = $("#dateReport");
-	
+	console.log("YABADA");
+
 	$.getScript("assets/js/setup/datePickerSetup.js")
 			.done(function(script, status) {
 				$dateReport.val(currentSlashDate());
@@ -200,6 +200,7 @@ $(document).ready(function() {
 					minDate: new Date(2018, 1, 1),
 					maxDate: new Date(2019, 0),
 					onSelect: function(d, i) {
+						console.log(d);
 						ajaxCall(
 							formatDtSql(d)
 						);
